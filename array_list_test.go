@@ -1,6 +1,9 @@
 package data_structures
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestArrayList(t *testing.T) {
 	tests := []struct {
@@ -81,5 +84,29 @@ func TestArrayList(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func ArrayListExample() {
+	list := NewArrayList[int]()
+
+	list.AddToFront(3)
+	list.AddToFront(2)
+	list.AddToFront(1)
+	list.AddToBack(4)
+	list.AddToBack(5)
+	list.RemoveFromFront()
+	list.RemoveFromBack()
+
+	iterator := list.CreateIterator()
+
+	for iterator.HasNext() {
+		element := iterator.GetNext()
+		fmt.Printf("Element is %+v\n", *element)
+		/* Output:
+		Element is 2
+		Element is 3
+		Element is 4
+		*/
 	}
 }

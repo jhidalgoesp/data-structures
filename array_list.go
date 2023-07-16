@@ -62,3 +62,31 @@ func (a *ArrayList[T]) resize() {
 
 	a.backingArray = temp
 }
+
+func (a *ArrayList[T]) CreateIterator() Iterator[T] {
+	return &ArrayListIterator[T]{
+		elements: a.backingArray,
+	}
+}
+
+type ArrayListIterator[T any] struct {
+	index    int
+	elements []*T
+}
+
+func (a *ArrayListIterator[T]) HasNext() bool {
+	if a.index < len(a.elements) && a.elements[a.index] != nil {
+		return true
+	}
+	return false
+
+}
+func (a *ArrayListIterator[T]) GetNext() *T {
+	if a.HasNext() {
+		element := a.elements[a.index]
+		a.index++
+		return element
+	}
+
+	return nil
+}
