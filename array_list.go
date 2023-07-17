@@ -1,9 +1,5 @@
 package data_structures
 
-const (
-	initialSize = 9
-)
-
 type ArrayList[T any] struct {
 	backingArray []*T
 	size         int
