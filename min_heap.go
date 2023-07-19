@@ -2,13 +2,13 @@ package data_structures
 
 import "fmt"
 
-// ComparatorFunc should return true if the first element is lesser than the second element
+// ComparatorFunc should return true if the first element is lower than the second element
 type ComparatorFunc[T any] func(a, b T) bool
 
 type MinHeap[T any] struct {
 	backingArray []*T
 	size         int
-	less         ComparatorFunc[T]
+	compareTo    ComparatorFunc[T]
 }
 
 func NewMinHeap[T any](comparatorFunc ComparatorFunc[T]) (*MinHeap[T], error) {
@@ -18,12 +18,22 @@ func NewMinHeap[T any](comparatorFunc ComparatorFunc[T]) (*MinHeap[T], error) {
 
 	return &MinHeap[T]{
 		backingArray: make([]*T, initialSize),
-		less:         comparatorFunc,
+		compareTo:    comparatorFunc,
 		size:         0,
 	}, nil
 }
 
 func (m *MinHeap[T]) Add(data T) {
+	if m.size == len(m.backingArray)-1 {
+		temp := make([]*T, m.size*2)
+
+		for i := range m.backingArray {
+			temp[i] = m.backingArray[i]
+		}
+
+		m.backingArray = temp
+	}
+
 	m.backingArray[m.size+1] = &data
 
 	m.size += 1
@@ -63,12 +73,12 @@ func (m *MinHeap[T]) downHeap(index int) {
 	}
 
 	if leftChild != nil && rightChild != nil {
-		if m.less(*leftChild, *rightChild) {
+		if m.compareTo(*leftChild, *rightChild) {
 			m.backingArray[index], m.backingArray[index*2] = m.backingArray[index*2], m.backingArray[index]
 			m.downHeap(index * 2)
 		}
 
-		if m.less(*rightChild, *leftChild) {
+		if m.compareTo(*rightChild, *leftChild) {
 			m.backingArray[index], m.backingArray[index*2+1] = m.backingArray[index*2+1], m.backingArray[index]
 			m.downHeap(index*2 + 1)
 		}
@@ -76,12 +86,12 @@ func (m *MinHeap[T]) downHeap(index int) {
 		return
 	}
 
-	if leftChild != nil && m.less(*leftChild, *parent) {
+	if leftChild != nil && m.compareTo(*leftChild, *parent) {
 		m.backingArray[index], m.backingArray[index*2] = m.backingArray[index*2], m.backingArray[index]
 		m.downHeap(index * 2)
 	}
 
-	if rightChild != nil && m.less(*rightChild, *parent) {
+	if rightChild != nil && m.compareTo(*rightChild, *parent) {
 		m.backingArray[index], m.backingArray[index*2+1] = m.backingArray[index*2+1], m.backingArray[index]
 		m.downHeap(index*2 + 1)
 	}
@@ -95,7 +105,7 @@ func (m *MinHeap[T]) upHeap(index int) {
 	node := *m.backingArray[index]
 	parent := *m.backingArray[index/2]
 
-	if m.less(node, parent) {
+	if m.compareTo(node, parent) {
 		m.backingArray[index/2], m.backingArray[index] = &node, &parent
 	}
 

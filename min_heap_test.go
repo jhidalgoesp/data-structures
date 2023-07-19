@@ -19,9 +19,17 @@ func TestMinHeap(t *testing.T) {
 				heap.Add(4)
 				heap.Add(2)
 				heap.Add(5)
+				heap.Add(6)
+				heap.Add(7)
+				heap.Add(8)
+				heap.Add(9)
+				heap.Add(10)
+				heap.Add(11)
+				heap.Add(11)
+				heap.Add(11)
 				heap.Remove()
 			},
-			expected: []int{2, 3, 4, 5},
+			expected: []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 11},
 		},
 	}
 
